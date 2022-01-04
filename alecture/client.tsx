@@ -1,8 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
+// import { BrowserRouter } from 'react-router-dom';
+import App from '@new/layouts/App';
 import { BrowserRouter } from 'react-router-dom';
-import App from '@layouts/App';
 
+{
+  /* <BrowserRouter>
+<App />
+</BrowserRouter> */
+}
 render(
   <BrowserRouter>
     <App />
