@@ -3,9 +3,9 @@ import React from 'react';
 
 const DirectMessage = () => {
   return (
-    <Workspace>
-      <div>DirectMessage 🐝</div>
-    </Workspace>
+    // <Workspace>
+    <div>DirectMessage 🐝</div>
+    // </Workspace>
   );
 };
 

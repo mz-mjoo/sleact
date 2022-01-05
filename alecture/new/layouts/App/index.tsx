@@ -12,7 +12,7 @@ const App = () => {
       <Redirect exact path="/" to="/login"></Redirect>
       <Route path="/login" component={Login} />
       <Route path="/signup" component={Signup} />
-      <Route path="/workspace" component={Workspace} />
+      <Route path="/workspace/:workspace" component={Workspace} />
 
       {/* <Route path="/workspace/channel" component={Channel} />
       <Route path="/workspace/dm" component={DirectMessage} /> */}

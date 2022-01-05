@@ -6,11 +6,11 @@ interface ModalProps {
   onCloseModal: () => void;
 }
 
-// { show, children, onCloseModal }
 const Modal: FC<ModalProps> = ({ show, children, onCloseModal }) => {
   const stopPropagation = useCallback((e) => {
     e.stopPropagation();
   }, []);
+
   if (!show) {
     return null;
   }

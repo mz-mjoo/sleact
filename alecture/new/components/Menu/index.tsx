@@ -8,10 +8,12 @@ interface MenuProps {
   closeButton?: boolean;
 }
 
-const Menu: FC<MenuProps> = ({ children, onCloseModal, style, closeButton }) => {
+const Menu: FC<MenuProps> = ({ show, children, onCloseModal, style, closeButton }) => {
   const stopPropagation = useCallback((e) => {
     e.stopPropagation();
   }, []);
+
+  if (!show) return null;
 
   return (
     <CreateMenu onClick={onCloseModal}>
