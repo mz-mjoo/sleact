@@ -9,50 +9,44 @@ import { toast } from 'react-toastify';
 import useSWR from 'swr';
 import Modal from '../Modal';
 
-interface InviteWorkspaceModalProps {
+interface InviteChannelModalProps {
   show: boolean;
   onCloseModal: () => void;
-  setShowCreateChannelModal: (flag: boolean) => void;
+  setShowInviteChannelModal: (flag: boolean) => void;
 }
 
-const InviteWorkspaceModal: FC<InviteWorkspaceModalProps> = ({ show, onCloseModal, setShowCreateChannelModal }) => {
-  const [newChannel, onChangeNewChannel, setNewChannel] = useInput('');
+const InviteChannelModal: FC<InviteChannelModalProps> = ({ show, onCloseModal, setShowInviteChannelModal }) => {
+  const [newMember, onChangeNewMember, setNewMember] = useInput('');
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
-  const {
-    data: userData,
-    error,
-    revalidate,
-    mutate,
-  } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
+  const { data: userData } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
     dedupingInterval: 2000,
   });
 
-  const { data: channelData, revalidate: revalidateChannel } = useSWR<IChannel[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null,
+  const { revalidate: revalidateMembers } = useSWR<IUser[]>(
+    userData && channel ? `http://localhost:3095/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
-    {
-      dedupingInterval: 2000,
-    },
   );
 
-  const onCreateChannel = useCallback(
+  const onInviteMember = useCallback(
     (e) => {
       e.preventDefault();
 
+      if (!newMember || !newMember.trim()) return;
+
       axios
         .post(
-          `/api/workspaces/${workspace}/channels`,
+          `/api/workspaces/${workspace}/channels/${channel}/members`,
           {
-            name: newChannel,
+            email: newMember,
           },
           {
             withCredentials: true,
           },
         )
         .then(() => {
-          setShowCreateChannelModal(false);
-          revalidateChannel();
-          setNewChannel('');
+          revalidateMembers();
+          setShowInviteChannelModal(false);
+          setNewMember('');
         })
         .catch((err) => {
           console.dir(err);
@@ -61,20 +55,20 @@ const InviteWorkspaceModal: FC<InviteWorkspaceModalProps> = ({ show, onCloseModa
           });
         });
     },
-    [newChannel],
+    [newMember],
   );
 
   return (
     <Modal show={show} onCloseModal={onCloseModal}>
-      <form onSubmit={onCreateChannel}>
-        <Label id="channel-label">
-          <span>채널</span>
-          <Input id="channel" value={newChannel} onChange={onChangeNewChannel} />
+      <form onSubmit={onInviteMember}>
+        <Label id="member-label">
+          <span>채널 멤버 초대</span>
+          <Input id="member" value={newMember} onChange={onChangeNewMember} />
         </Label>
-        <Button type="submit">생성하기</Button>
+        <Button type="submit">초대하기</Button>
       </form>
     </Modal>
   );
 };
 
-export default InviteWorkspaceModal;
+export default InviteChannelModal;

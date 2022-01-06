@@ -17,18 +17,13 @@ interface InviteWorkspaceModalProps {
 
 const InviteWorkspaceModal: FC<InviteWorkspaceModalProps> = ({ show, onCloseModal, setShowInviteWorkSpaceModal }) => {
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
-  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
-  const {
-    data: userData,
-    error,
-    revalidate,
-    mutate,
-  } = useSWR<IUser | false>('http://localhost:3095/api/users', fetcher, {
+  const { workspace } = useParams<{ workspace: string; channel: string }>();
+  const { data: userData } = useSWR<IUser | false>('/api/users', fetcher, {
     dedupingInterval: 2000,
   });
 
-  const { data: memberData, revalidate: revalidateChannel } = useSWR<IChannel[]>(
-    userData ? `http://localhost:3095/api/workspaces/${workspace}/channels` : null,
+  const { revalidate: revalidateMember } = useSWR<IChannel[]>(
+    userData ? `/api/workspaces/${workspace}/members` : null,
     fetcher,
     {
       dedupingInterval: 2000,
@@ -52,7 +47,7 @@ const InviteWorkspaceModal: FC<InviteWorkspaceModalProps> = ({ show, onCloseModa
           },
         )
         .then(() => {
-          revalidateChannel();
+          revalidateMember();
           setShowInviteWorkSpaceModal(false);
           setNewMember('');
         })

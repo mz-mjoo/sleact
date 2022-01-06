@@ -58,7 +58,7 @@ const Signup = () => {
             password,
           }) // 성공 단계
           .then((response) => {
-            console.log(response);
+            console.log('어디!?!', response);
             setSignupSuccess(true);
           }) // 실패 단계
           .catch((error) => {

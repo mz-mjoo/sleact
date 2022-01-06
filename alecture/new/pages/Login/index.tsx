@@ -31,7 +31,7 @@ const Login = () => {
           },
         )
         .then((response) => {
-          console.log(response);
+          console.log('어디', response);
           mutate(response.data, false);
         })
         .catch((error) => {
