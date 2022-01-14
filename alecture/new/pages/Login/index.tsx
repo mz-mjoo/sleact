@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import fetcher from '@new/utils/fetcher';
 
 const Login = () => {
-  const { data, error, revalidate, mutate } = useSWR('http://localhost:3095/api/users', fetcher, {
+  const { data, error, revalidate, mutate } = useSWR('/api/users', fetcher, {
     dedupingInterval: 100000,
   });
   const [email, onChangeEmail] = useInput('');
@@ -32,7 +32,7 @@ const Login = () => {
         )
         .then((response) => {
           console.log('어디', response);
-          mutate(response.data, false);
+          revalidate();
         })
         .catch((error) => {
           console.log(error);

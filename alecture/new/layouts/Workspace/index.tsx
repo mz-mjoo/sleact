@@ -2,7 +2,7 @@ import fetcher from '@new/utils/fetcher';
 import axios from 'axios';
 import React, { useCallback, useEffect, useState, VFC } from 'react';
 import { Redirect, Route, Switch, useParams } from 'react-router';
-import useSWR, { mutate } from 'swr';
+import useSWR from 'swr';
 import {
   AddButton,
   Channels,
@@ -55,6 +55,7 @@ const Workspace: VFC = () => {
     data: userData,
     error,
     revalidate,
+    mutate,
   } = useSWR<IUser | false>('/api/users', fetcher, {
     dedupingInterval: 2000,
   });
@@ -83,9 +84,9 @@ const Workspace: VFC = () => {
         withCredentials: true,
       })
       .then(() => {
-        mutate('/api/users/logout', false);
+        mutate(false, false);
       });
-  }, [mutate]);
+  }, []);
 
   const onCloseUserProfile = useCallback(() => {
     // e.stopPropagation();
