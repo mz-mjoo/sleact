@@ -1,4 +1,4 @@
-import { IDM } from '@typings/db';
+import { IChat, IDM } from '@typings/db';
 import React, { memo, useMemo, VFC } from 'react';
 import { ChatWrapper } from './styles';
 import gravatar from 'gravatar';
@@ -7,7 +7,7 @@ import regexifyString from 'regexify-string';
 import { Link, useParams } from 'react-router-dom';
 
 interface ChatProps {
-  data: IDM;
+  data: IDM | IChat;
 }
 const Chat: VFC<ChatProps> = ({ data }) => {
   const user = data.Sender;

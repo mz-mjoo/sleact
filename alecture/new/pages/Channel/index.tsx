@@ -29,7 +29,6 @@ const Channel = () => {
     <Container>
       <Header>Channel 🐧</Header>
       <ChatList chatSections={chatSections} />
-      {/* <ChatList /> */}
       <ChatBox chat={chat} onChangeChat={onChangeChat} onSubmitForm={onSubmitForm} />
     </Container>
   );

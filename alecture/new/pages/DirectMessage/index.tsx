@@ -47,7 +47,7 @@ const DirectMessage = () => {
     return null;
   }
 
-  const chatSections = makeSection(chatData ? [...chatData].reverse() : []);
+  const chatSections = makeSection(chatData ? chatData.flat().reverse() : []);
 
   return (
     <Container>

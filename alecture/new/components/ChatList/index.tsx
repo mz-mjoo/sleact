@@ -1,11 +1,11 @@
-import { IDM } from '@typings/db';
+import { IChat, IDM } from '@typings/db';
 import React, { useCallback, useRef, VFC } from 'react';
 import Chat from '../Chat';
 import { ChatZone, Section, StickyHeader } from './styles';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 interface ChatListProps {
-  chatSections: { [key: string]: IDM[] };
+  chatSections: { [key: string]: (IDM | IChat)[] };
 }
 
 const ChatList: VFC<ChatListProps> = ({ chatSections }) => {
