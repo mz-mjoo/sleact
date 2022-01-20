@@ -10,8 +10,12 @@ interface ChatProps {
   data: IDM | IChat;
 }
 const Chat: VFC<ChatProps> = ({ data }) => {
-  const user = data.Sender;
+  // console.log('Chat 컴포넌트', user);
+
+  const user = 'Sender' in data ? data.Sender : data.User;
   const { workspace } = useParams<{ workspace: string }>();
+
+  console.log('Chat 컴포넌트 user', user);
 
   // \d 숫자
   // +는 1개 이상
@@ -55,4 +59,4 @@ const Chat: VFC<ChatProps> = ({ data }) => {
   );
 };
 
-export default memo(Chat);
+export default Chat;

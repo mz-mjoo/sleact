@@ -1,6 +1,6 @@
 import fetcher from '@new/utils/fetcher';
-import React, { useCallback } from 'react';
-import useSWR from 'swr';
+import React, { useCallback, useEffect } from 'react';
+import useSWR, { useSWRInfinite } from 'swr';
 import { Container } from '../Channel/styles';
 import { Header } from '../Signup/styles';
 import gravatar from 'gravatar';
@@ -11,6 +11,7 @@ import axios from 'axios';
 import { IDM } from '@typings/db';
 import ChatList from '@new/components/ChatList';
 import makeSection from '@new/utils/makeSection';
+import useSocket from '@new/hooks/useSocket';
 
 const DirectMessage = () => {
   const { workspace, id } = useParams<{ workspace: string; id: string }>();
@@ -22,7 +23,15 @@ const DirectMessage = () => {
     data: chatData,
     mutate: mutateChat,
     revalidate,
-  } = useSWR<IDM[]>(`/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=1`, fetcher);
+    setSize,
+  } = useSWRInfinite<IDM[]>(
+    (index) => `/api/workspaces/${workspace}/dms/${id}/chats?perPage=20&page=${index + 1}`,
+    fetcher,
+  );
+  const isEmpty = chatData?.[0]?.length === 0;
+  const isReachingEnd = isEmpty || (chatData && chatData[chatData.length - 1]?.length < 20) || false;
+
+  const [socket] = useSocket(workspace);
 
   const onSubmitForm = useCallback(
     (e) => {
@@ -43,6 +52,16 @@ const DirectMessage = () => {
     [chat],
   );
 
+  const onMessage = useCallback((data: IDM) => {}, []);
+
+  useEffect(() => {
+    socket?.on('dm', onMessage);
+
+    return () => {
+      socket?.off('dm', onMessage);
+    };
+  }, [socket, onMessage]);
+
   if (!userData || !myData) {
     return null;
   }
@@ -55,7 +74,7 @@ const DirectMessage = () => {
         <img src={gravatar.url(userData.email, { s: '24px', d: 'retro' })} alt={userData.nickname} />
         <span>{userData.nickname}</span>
       </Header>
-      <ChatList chatSections={chatSections} />
+      <ChatList chatSections={chatSections} setSize={setSize} isEmpty={isEmpty} isReachingEnd={isReachingEnd} />
       <ChatBox chat={chat} onChangeChat={onChangeChat} onSubmitForm={onSubmitForm} />
     </Container>
   );
