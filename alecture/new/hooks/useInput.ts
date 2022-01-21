@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useCallback, useState, UIEvent } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState, UIEvent, ChangeEvent } from 'react';
 
 // const useInput = <T = any>(initData: T): [T, (e: UIEvent<HTMLInputElement>) => void, Dispatch<SetStateAction<T>>] => {
 //   const [value, setValue] = useState(initData);
@@ -22,12 +22,12 @@ import { Dispatch, SetStateAction, useCallback, useState, UIEvent } from 'react'
 // };
 
 // --- any 사용
-type ReturnTypes<T = any> = [T, (e: any) => void, Dispatch<SetStateAction<T>>];
+type ReturnTypes<T> = [T, (e: ChangeEvent<HTMLInputElement>) => void, Dispatch<SetStateAction<T>>];
 
-const useInput = <T = any>(initData: T): ReturnTypes => {
+const useInput = <T>(initData: T): ReturnTypes<T> => {
   const [value, setValue] = useState(initData);
-  const handler = useCallback((e: any) => {
-    setValue(e.target.value);
+  const handler = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value as unknown as T);
   }, []);
 
   return [value, handler, setValue];
